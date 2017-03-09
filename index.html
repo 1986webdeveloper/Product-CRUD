@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <title>Product-CRUD</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+        <link rel="stylesheet"  href="css/style.css"/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.4.3/sweetalert2.css">
+    </head>
+
+    <body>
+        <div id="app" class="container-fluid">
+            <router-view class="view"></router-view>
+        </div>
+        <!-- Product Listing Template -->
+        <template id="product-listing-template">
+          
+            <div>
+
+                <router-link :to="{ path: 'create' }" class="btn btn-primary">Add Product</router-link>
+                <table class="table comman-table">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th class="col-sm-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(person, index) in products">
+                            <td>
+                                <a>{{person.name }}</a>
+                            </td>
+                            <td>{{ person.description }}</td>
+                            <td>
+                              {{ person.price }}
+                            </td>
+                            <td class="lasttd">
+                              <router-link :to="{ name: 'person', params: { id: person.id }}" class="btn btn-default btn-success"><i class="fa fa-edit"></i> Edit</router-link>
+                              <a class="btn btn-danger" v-on:click="deleteProduct(person, index)"><i class="fa   fa-trash"></i> Delete</a> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination-row">
+                    <ul class="pagination">
+                    <li class="paginate_button previous" v-bind:class="prevPageDisabled()"><a href="javascript:;" v-on:click="prevPage()">Previous</a></li>
+                    <li v-bind:class="{'active' : n+1 === currentPage}" v-for="n in pageRange" class="paginate_button" v-on:click="setPage(n+1)"><a href="javascript:;">{{n+1}}</a></li>
+                    <li class="paginate_button next" v-bind:class="nextPageDisabled()"><a href="javascript:;" v-on:click="nextPage()">Next</a></li>
+                    </ul>
+              </div>
+          
+            </div>
+        </template>
+
+        <!-- Product Creation Template -->
+
+        <template id="product-creation-template">
+            <div>
+                Create Product
+                <router-link to="/">Homepage</router-link>
+                <form>
+                    <div class="form-group">
+                        <label for="productName">Name</label>
+                        <input type="text" v-validate="'required'" name="name" class="form-control" id="productName" placeholder="Product Name" v-model="productName">
+                        <span v-show="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Description</label>
+                        <input type="text" v-validate="'required'" name="desc" class="form-control" id="productDescription" placeholder="Product Description" v-model="productDescription">
+                        <span v-show="errors.has('desc')" class="help is-danger">{{ errors.first('desc') }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price</label>
+                        <input type="text" v-validate="'required|numeric'" type="text" name="price" class="form-control" id="productPrice" placeholder="Product Price" v-model="productPrice">
+                        <span v-show="errors.has('price')" class="help is-danger">{{ errors.first('price') }}</span>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" v-on:click.once="createProduct">Submit</button>
+                </form>
+            </div>
+
+        </template>
+
+        <!-- Product Edit Template -->
+        <template id="product-detail-template">
+            <div>
+                Edit Product
+                <router-link to="/">Homepage</router-link>
+                <form>
+                    <div class="form-group">
+                        <label for="productName">Name</label>
+                        <input type="text" class="form-control" id="productName" placeholder="Product Name" v-model="productName">
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Description</label>
+                        <input type="text" class="form-control" id="productDescription" placeholder="Product Description" v-model="productDescription">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price</label>
+                        <input type="text" class="form-control" id="productPrice" placeholder="Product Price" v-model="productPrice">
+                    </div>
+
+                    <button type="button" class="btn btn-primary" v-on:click.once="updateProduct">Submit</button>
+                </form>
+              
+            </div>
+        </template>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/2.0.1/vue-router.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.2.1/vue-resource.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue/dist/bootstrap-vue.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/vee-validate/2.0.0-beta.25/vee-validate.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.4.3/sweetalert2.min.js">
+    </script>
+    <script>
+        Vue.use(VeeValidate); // good to go. 
+    </script>
+    
+    <!-- Application JS -->
+    <script src="js/app.js"></script>
+    </body>
+</html>
